@@ -58,7 +58,7 @@ func (s *Server) HandleQueries() {
 	var handleFunc func(q query.Query)
 
 	for time.Now().Unix() < s.EndTime.Unix() {
-		currentEvent, err := s.Buff.GetQuery()
+		currentQuery, err := s.Buff.GetQuery()
 		if err != nil {
 			continue
 		}
@@ -75,8 +75,8 @@ func (s *Server) HandleQueries() {
 			handleFunc = normalHandle
 		}
 
-		fmt.Printf("Server has handled query: ID = [%d], Priority = [%d]\n", currentEvent.ID, currentEvent.Priority)
-		handleFunc(currentEvent)
+		fmt.Printf("Server has handled query: ID = [%d], Priority = [%d]\n", currentQuery.ID, currentQuery.Priority)
+		handleFunc(currentQuery)
 	}
 }
 
