@@ -63,12 +63,12 @@ func (s *Server) HandleQueries() {
 			continue
 		}
 
-		if s.Cpu1.IsBroken && s.Cpu2.IsBroken {
+		if s.Cpu1.IsBroken() && s.Cpu2.IsBroken() {
 			fmt.Println("Both CPUs are broken, waiting...")
 			continue
 		}
 
-		if s.Cpu1.IsBroken || s.Cpu2.IsBroken {
+		if s.Cpu1.IsBroken() || s.Cpu2.IsBroken() {
 			fmt.Println("One of CPU is broken, decreasing handling speed...")
 			handleFunc = slowHandle
 		} else {

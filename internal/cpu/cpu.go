@@ -3,14 +3,14 @@ package cpu
 import "sync"
 
 type CPU struct {
-	mu       *sync.Mutex
-	IsBroken bool
+	mu      *sync.Mutex
+	Healthy bool
 }
 
 func NewCpu() *CPU {
 	return &CPU{
-		mu:       &sync.Mutex{},
-		IsBroken: false,
+		mu:      &sync.Mutex{},
+		Healthy: true,
 	}
 }
 
@@ -18,12 +18,19 @@ func (c *CPU) Break() {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
-	c.IsBroken = true
+	c.Healthy = false
 }
 
 func (c *CPU) Repair() {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
-	c.IsBroken = false
+	c.Healthy = true
+}
+
+func (c *CPU) IsBroken() bool {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
+	return c.Healthy
 }
