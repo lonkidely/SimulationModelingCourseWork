@@ -72,6 +72,9 @@ func main() {
 	go serv.Start(wg)
 
 	wg.Add(1)
+	go serv.Start(wg)
+
+	wg.Add(1)
 	go breakCpu(cpu1, wg)
 
 	wg.Add(1)
