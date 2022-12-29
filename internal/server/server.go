@@ -63,6 +63,7 @@ func (s *Server) HandleQueries() {
 	for time.Now().Unix() < s.EndTime.Unix() {
 		currentQuery, err := s.Buff.GetQuery()
 		if err != nil {
+			s.log.Info("Buffer is empty, queries not found")
 			continue
 		}
 

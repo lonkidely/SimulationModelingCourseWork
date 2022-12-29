@@ -23,7 +23,7 @@ const (
 )
 
 func main() {
-	endTime := time.Now().Add(2 * time.Second)
+	endTime := time.Now().Add(10 * time.Second)
 
 	cpu1Logger, closeResp := logger.NewLogger(CpuOneLogPath)
 	defer func(closer func() error, log *logrus.Logger) {
@@ -111,9 +111,6 @@ func main() {
 	wg := &sync.WaitGroup{}
 
 	wg.Add(1)
-	go serv.Start(wg)
-
-	wg.Add(1)
 	go breakCpu(cpu1, wg)
 
 	wg.Add(1)
@@ -127,6 +124,9 @@ func main() {
 
 	wg.Add(1)
 	go genQuery3(serv, wg)
+
+	wg.Add(1)
+	go serv.Start(wg)
 
 	wg.Wait()
 }
