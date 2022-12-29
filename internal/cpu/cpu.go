@@ -1,8 +1,9 @@
 package cpu
 
 import (
-	"github.com/sirupsen/logrus"
 	"sync"
+
+	"github.com/sirupsen/logrus"
 )
 
 type CPU struct {

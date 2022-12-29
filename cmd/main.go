@@ -1,10 +1,10 @@
 package main
 
 import (
-	"SimulationModelingCourseWork/pkg/logger"
-	"github.com/sirupsen/logrus"
 	"sync"
 	"time"
+
+	"github.com/sirupsen/logrus"
 
 	"SimulationModelingCourseWork/internal"
 	"SimulationModelingCourseWork/internal/buffer"
@@ -12,6 +12,7 @@ import (
 	"SimulationModelingCourseWork/internal/query"
 	"SimulationModelingCourseWork/internal/server"
 	"SimulationModelingCourseWork/internal/utils"
+	"SimulationModelingCourseWork/pkg/logger"
 )
 
 const (

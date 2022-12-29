@@ -1,9 +1,10 @@
 package server
 
 import (
-	"github.com/sirupsen/logrus"
 	"sync"
 	"time"
+
+	"github.com/sirupsen/logrus"
 
 	"SimulationModelingCourseWork/internal"
 	"SimulationModelingCourseWork/internal/buffer"
@@ -78,7 +79,6 @@ func (s *Server) HandleQueries() {
 		}
 
 		s.log.Infof("Server has handled query: ID = [%d], Priority = [%d]", currentQuery.ID, currentQuery.Priority)
-		//fmt.Printf("Server has handled query: ID = [%d], Priority = [%d]\n", currentQuery.ID, currentQuery.Priority)
 		handleFunc(currentQuery)
 	}
 }

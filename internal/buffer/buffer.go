@@ -2,9 +2,10 @@ package buffer
 
 import (
 	"fmt"
-	"github.com/sirupsen/logrus"
 	"sort"
 	"sync"
+
+	"github.com/sirupsen/logrus"
 
 	"SimulationModelingCourseWork/internal"
 	"SimulationModelingCourseWork/internal/query"
