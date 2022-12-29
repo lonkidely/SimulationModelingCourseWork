@@ -6,3 +6,7 @@ run:
 lint:
 	golangci-lint run ./...
 	go fmt ./...
+
+.PHONY: clear
+clear:
+	rm -f logs/*

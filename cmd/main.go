@@ -1,6 +1,8 @@
 package main
 
 import (
+	"SimulationModelingCourseWork/pkg/logger"
+	"github.com/sirupsen/logrus"
 	"sync"
 	"time"
 
@@ -12,13 +14,52 @@ import (
 	"SimulationModelingCourseWork/internal/utils"
 )
 
+const (
+	CpuOneLogPath = "./logs/cpu1"
+	CpuTwoLogPath = "./logs/cpu2"
+	ServerLogPath = "./logs/server"
+	BufferLogPath = "./logs/buffer"
+)
+
 func main() {
 	endTime := time.Now().Add(2 * time.Second)
 
-	cpu1 := cpu.NewCpu()
-	cpu2 := cpu.NewCpu()
-	buff := buffer.NewBuffer()
-	serv := server.NewServer(cpu1, cpu2, buff, endTime)
+	cpu1Logger, closeResp := logger.NewLogger(CpuOneLogPath)
+	defer func(closer func() error, log *logrus.Logger) {
+		err := closer()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}(closeResp, cpu1Logger)
+
+	cpu2Logger, closeResp := logger.NewLogger(CpuTwoLogPath)
+	defer func(closer func() error, log *logrus.Logger) {
+		err := closer()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}(closeResp, cpu2Logger)
+
+	serverLogger, closeResp := logger.NewLogger(ServerLogPath)
+	defer func(closer func() error, log *logrus.Logger) {
+		err := closer()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}(closeResp, serverLogger)
+
+	bufferLogger, closeResp := logger.NewLogger(BufferLogPath)
+	defer func(closer func() error, log *logrus.Logger) {
+		err := closer()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}(closeResp, bufferLogger)
+
+	cpu1 := cpu.NewCpu(cpu1Logger)
+	cpu2 := cpu.NewCpu(cpu2Logger)
+	buff := buffer.NewBuffer(bufferLogger)
+	serv := server.NewServer(cpu1, cpu2, buff, endTime, serverLogger)
 
 	breakCpu := func(cpu *cpu.CPU, wg *sync.WaitGroup) {
 		defer wg.Done()
@@ -67,9 +108,6 @@ func main() {
 	}
 
 	wg := &sync.WaitGroup{}
-
-	wg.Add(1)
-	go serv.Start(wg)
 
 	wg.Add(1)
 	go serv.Start(wg)

@@ -1,7 +1,7 @@
 package server
 
 import (
-	"fmt"
+	"github.com/sirupsen/logrus"
 	"sync"
 	"time"
 
@@ -17,14 +17,16 @@ type Server struct {
 	Cpu2    *cpu.CPU
 	Buff    *buffer.Buffer
 	EndTime time.Time
+	log     *logrus.Logger
 }
 
-func NewServer(cpu1, cpu2 *cpu.CPU, buf *buffer.Buffer, endTime time.Time) *Server {
+func NewServer(cpu1, cpu2 *cpu.CPU, buf *buffer.Buffer, endTime time.Time, logger *logrus.Logger) *Server {
 	return &Server{
 		Cpu1:    cpu1,
 		Cpu2:    cpu2,
 		Buff:    buf,
 		EndTime: endTime,
+		log:     logger,
 	}
 }
 
@@ -64,18 +66,19 @@ func (s *Server) HandleQueries() {
 		}
 
 		if s.Cpu1.IsBroken() && s.Cpu2.IsBroken() {
-			fmt.Println("Both CPUs are broken, waiting...")
+			s.log.Info("Both CPUs are broken, waiting...")
 			continue
 		}
 
 		if s.Cpu1.IsBroken() || s.Cpu2.IsBroken() {
-			fmt.Println("One of CPU is broken, decreasing handling speed...")
+			s.log.Info("One of CPU is broken, decreasing handling speed...")
 			handleFunc = slowHandle
 		} else {
 			handleFunc = normalHandle
 		}
 
-		fmt.Printf("Server has handled query: ID = [%d], Priority = [%d]\n", currentQuery.ID, currentQuery.Priority)
+		s.log.Infof("Server has handled query: ID = [%d], Priority = [%d]", currentQuery.ID, currentQuery.Priority)
+		//fmt.Printf("Server has handled query: ID = [%d], Priority = [%d]\n", currentQuery.ID, currentQuery.Priority)
 		handleFunc(currentQuery)
 	}
 }
@@ -83,7 +86,7 @@ func (s *Server) HandleQueries() {
 func (s *Server) Start(wg *sync.WaitGroup) {
 	defer wg.Done()
 
-	fmt.Printf("Server started: %s", time.Now().String())
+	s.log.Infof("Server started: %s", time.Now().String())
 	s.HandleQueries()
-	fmt.Printf("Server finished: %s", time.Now().String())
+	s.log.Infof("Server finished: %s", time.Now().String())
 }
